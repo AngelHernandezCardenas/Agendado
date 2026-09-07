@@ -6,15 +6,15 @@ Agenda de estudio local para organizar bloques de JavaScript, Python, C++ y auto
 
 ## Ejecutar
 
-Requiere Python 3 y Windows para los avisos nativos.
+Requiere Python 3. En Windows, PowerShell permite los avisos nativos; en Linux, la agenda y las notificaciones del navegador funcionan de forma multiplataforma.
 
 ```powershell
-python server.py
+python backend/server.py
 ```
 
 Abre http://127.0.0.1:8765 en el PC. Para abrirlo en el celular, conecta ambos dispositivos a la misma red Wi-Fi, ejecuta el servidor y sustituye `<IP-DE-ESTE-PC>` por la IPv4 del PC, por ejemplo `http://192.168.1.25:8765`. Puedes consultar la IPv4 con `ipconfig` y buscar `Direccion IPv4`. Si Windows Firewall pregunta, permite el acceso en redes privadas.
 
-Mantener la pagina abierta permite consultar el horario y usar el boton de prueba de notificacion. Los bloques iniciales se guardan en el navegador; los nuevos bloques persisten en `localStorage`.
+Mantener la pagina abierta permite consultar el horario y recibir notificaciones en tiempo real. Pulsa "Permitir avisos" y acepta el permiso del navegador. Los bloques iniciales se guardan en el navegador; los nuevos bloques persisten en `localStorage`.
 
 ## Abrir sin VS Code
 
@@ -29,7 +29,18 @@ Para detenerlo manualmente, cierra el proceso `python.exe` desde el Administrado
 - Sabado: repaso ligero.
 - Domingo: planificacion de la semana.
 
-La interfaz se construye con JavaScript y CSS sin dependencias. `server.py` sirve los archivos y usa PowerShell para solicitar el aviso de Windows.
+La interfaz se construye con JavaScript y CSS sin dependencias. `backend/server.py` sirve los archivos de `frontend/` y usa PowerShell para solicitar el aviso de Windows cuando se ejecuta en Windows.
+
+## Empaquetado para Windows y Linux
+
+El ejecutable de Windows se encuentra en `dist/Agendado.exe`. Al abrirlo, inicia el servidor local y abre Agendado automáticamente; no necesita el puerto público ni el enlace de Dev Tunnel. El ejecutable debe construirse en el mismo sistema operativo donde se va a utilizar; un `.exe` de Windows no funciona en Linux.
+
+```powershell
+python -m pip install -r requirements-packaging.txt
+python -m PyInstaller packaging/agendado.spec
+```
+
+En Windows, el resultado será `dist/Agendado.exe`. En Linux, ejecuta los mismos comandos desde Linux y se generará `dist/Agendado`, que podrá ejecutarse en otros equipos Linux compatibles sin instalar Python. La configuración incluye automáticamente `frontend/` dentro del ejecutable.
 
 ---
 
@@ -46,12 +57,12 @@ A local study planner for organizing JavaScript, Python, C++, and automation ses
 Requires Python 3 and Windows for native notifications.
 
 ```powershell
-python server.py
+python backend/server.py
 ```
 
 Open http://127.0.0.1:8765 on the PC. To open it on a phone, connect both devices to the same Wi-Fi network, run the server, and replace `<IP-OF-THIS-PC>` with the PC's IPv4 address, for example `http://192.168.1.25:8765`. You can find the IPv4 address by running `ipconfig` and looking for `IPv4 Address`. If Windows Firewall asks, allow access on private networks.
 
-Keep the page open to view the schedule and use the test notification button. The initial sessions are saved in the browser; new sessions persist in `localStorage`.
+Keep the page open to view the schedule and receive real-time notifications. Click "Permitir avisos" and accept the browser permission. The initial sessions are saved in the browser; new sessions persist in `localStorage`.
 
 ### Opening Without VS Code
 
@@ -83,12 +94,12 @@ Agenda d'étude local pour organiser des sessions de JavaScript, Python, C++ et 
 Python 3 et Windows sont requis pour les notifications natives.
 
 ```powershell
-python server.py
+python backend/server.py
 ```
 
 Ouvrez http://127.0.0.1:8765 sur le PC. Pour l'ouvrir sur un téléphone, connectez les deux appareils au même réseau Wi-Fi, démarrez le serveur et remplacez `<IP-DE-CE-PC>` par l'adresse IPv4 du PC, par exemple `http://192.168.1.25:8765`. Vous pouvez trouver l'adresse IPv4 en exécutant `ipconfig` et en recherchant `Adresse IPv4`. Si le pare-feu Windows le demande, autorisez l'accès sur les réseaux privés.
 
-Laissez la page ouverte pour consulter l'emploi du temps et utiliser le bouton de notification de test. Les sessions initiales sont enregistrées dans le navigateur ; les nouvelles sessions sont conservées dans `localStorage`.
+Laissez la page ouverte pour consulter l'emploi du temps et recevoir des notifications en temps réel. Cliquez sur « Permitir avisos » et acceptez l'autorisation du navigateur. Les sessions initiales sont enregistrées dans le navigateur ; les nouvelles sessions sont conservées dans `localStorage`.
 
 ### Ouverture sans VS Code
 
@@ -120,12 +131,12 @@ Lokaler Lernplaner zum Organisieren von JavaScript-, Python-, C++- und Automatis
 Für native Benachrichtigungen werden Python 3 und Windows benötigt.
 
 ```powershell
-python server.py
+python backend/server.py
 ```
 
 Öffne http://127.0.0.1:8765 auf dem PC. Um die Anwendung auf einem Smartphone zu öffnen, verbinde beide Geräte mit demselben WLAN, starte den Server und ersetze `<IP-DIESES-PC>` durch die IPv4-Adresse des PCs, zum Beispiel `http://192.168.1.25:8765`. Die IPv4-Adresse findest du mit `ipconfig` unter `IPv4-Adresse`. Wenn die Windows-Firewall fragt, erlaube den Zugriff in privaten Netzwerken.
 
-Lass die Seite geöffnet, um den Zeitplan anzuzeigen und die Testbenachrichtigung zu verwenden. Die voreingestellten Einheiten werden im Browser gespeichert; neue Einheiten bleiben in `localStorage` erhalten.
+Lass die Seite geöffnet, um den Zeitplan anzuzeigen und Echtzeitbenachrichtigungen zu erhalten. Klicke auf „Permitir avisos“ und erlaube die Browser-Berechtigung. Die voreingestellten Einheiten werden im Browser gespeichert; neue Einheiten bleiben in `localStorage` erhalten.
 
 ### Öffnen ohne VS Code
 

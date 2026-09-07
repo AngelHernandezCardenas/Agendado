@@ -1,9 +1,13 @@
 import json
 import subprocess
+import sys
+import threading
+import webbrowser
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-ROOT = Path(__file__).parent
+PROJECT_ROOT = Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parents[1]))
+ROOT = PROJECT_ROOT / "frontend"
 
 
 def send_windows_notification(title: str, message: str) -> bool:
@@ -67,10 +71,11 @@ class AppHandler(SimpleHTTPRequestHandler):
 
 if __name__ == "__main__":
     port = 8765
-    server = ThreadingHTTPServer(("0.0.0.0", port), lambda *args: AppHandler(*args, directory=str(ROOT)))
+    server = ThreadingHTTPServer(("127.0.0.1", port), lambda *args: AppHandler(*args, directory=str(ROOT)))
     print(f"Agendado listo en http://127.0.0.1:{port}")
     print(f"En el celular, abre http://<IP-DE-ESTE-PC>:{port} conectado a la misma red Wi-Fi.")
     print("Pulsa Ctrl+C para detenerlo.")
+    threading.Timer(0.8, lambda: webbrowser.open(f"http://127.0.0.1:{port}")).start()
     try:
         server.serve_forever()
     except KeyboardInterrupt:

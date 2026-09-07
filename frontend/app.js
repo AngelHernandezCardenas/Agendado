@@ -19,6 +19,31 @@ function formatTime(time) { return new Date(`2000-01-01T${time}`).toLocaleTimeSt
 function currentMinutes() { const now = new Date(); return now.getHours() * 60 + now.getMinutes(); }
 function minutes(time) { const [hours, mins] = time.split(':').map(Number); return hours * 60 + mins; }
 function isPauseWindow() { return selectedDay >= 1 && selectedDay <= 3 && currentMinutes() >= 420 && currentMinutes() < 900; }
+function timeOptions(interval, selectedValues = []) {
+  const values = new Set(selectedValues);
+  for (let total = 0; total < 24 * 60; total += interval) {
+    const hours = String(Math.floor(total / 60)).padStart(2, '0');
+    const mins = String(total % 60).padStart(2, '0');
+    values.add(`${hours}:${mins}`);
+  }
+  return [...values].sort().map((value) => `<option value="${value}" ${selectedValues.includes(value) ? 'selected' : ''}>${formatTime(value)}</option>`).join('');
+}
+function populateTimeOptions(interval, selectedStart = '', selectedEnd = '') {
+  const values = [selectedStart, selectedEnd].filter(Boolean);
+  const options = timeOptions(interval, values);
+  $('session-start').innerHTML = options;
+  $('session-end').innerHTML = options;
+  if (selectedStart) $('session-start').value = selectedStart;
+  if (selectedEnd) $('session-end').value = selectedEnd;
+}
+function selectedDays() { return [...document.querySelectorAll('input[name="session-days"]:checked')].map((input) => Number(input.value)); }
+function renderDayOptions(days = [selectedDay]) {
+  $('day-options').innerHTML = dayNames.map((name, index) => `<label><input type="checkbox" name="session-days" value="${index}" ${days.includes(index) ? 'checked' : ''}>${name}</label>`).join('');
+}
+function applyDayRange(range) {
+  const ranges = { weekdays: [1, 2, 3, 4, 5], weekend: [0, 6], 'monday-saturday': [1, 2, 3, 4, 5, 6], everyday: [0, 1, 2, 3, 4, 5, 6] };
+  if (ranges[range]) renderDayOptions(ranges[range]);
+}
 
 function renderTabs() {
   $('day-tabs').innerHTML = dayNames.map((name, index) => `<button class="day-tab ${index === selectedDay ? 'active' : ''}" data-day="${index}">${shortDays[index]}<small>${index === new Date().getDay() ? 'HOY' : ''}</small></button>`).join('');
@@ -47,8 +72,9 @@ function openSessionDialog(sessionId = null) {
   $('session-form').dataset.editingId = session ? session.id : '';
   $('dialog-eyebrow').textContent = session ? 'EDITAR BLOQUE' : 'NUEVO BLOQUE';
   $('dialog-title').textContent = session ? 'Ajusta tu tarea' : 'Agrega una tarea';
-  $('session-day').innerHTML = dayNames.map((name, index) => `<option value="${index}" ${index === selectedDay ? 'selected' : ''}>${name}</option>`).join('');
-  $('session-start').value = session?.start || '16:00'; $('session-end').value = session?.end || '17:00';
+  $('day-range').value = 'custom'; renderDayOptions([selectedDay]);
+  const start = session?.start || '16:00'; const end = session?.end || '17:00';
+  $('time-interval').value = '5'; populateTimeOptions(Number($('time-interval').value), start, end);
   $('session-task').value = session?.task || ''; $('session-activity').value = session?.activity || session?.language || 'Python'; $('form-error').textContent = '';
   $('session-dialog').showModal();
 }
@@ -63,12 +89,17 @@ function notifyIfBlockStarts() {
   const key = `recordatorios-notified-${new Date().toISOString().slice(0, 10)}-${session.start}-${session.task}`;
   if (localStorage.getItem(key)) return;
   localStorage.setItem(key, 'true');
+  if ('Notification' in window && Notification.permission === 'granted') {
+    new Notification('Agendado · Ahora', { body: `${session.task} (${formatTime(session.start)} - ${formatTime(session.end)})` });
+  }
   fetch('/api/notify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ title: 'Agendado · Ahora', message: `${session.task} (${formatTime(session.start)} - ${formatTime(session.end)})` }) }).catch(() => {});
 }
 
 $('add-session').addEventListener('click', () => openSessionDialog());
-$('session-form').addEventListener('submit', (event) => { event.preventDefault(); const day = Number($('session-day').value); const start = $('session-start').value; const end = $('session-end').value; const task = $('session-task').value.trim(); if (!task || !start || !end || minutes(end) <= minutes(start)) { $('form-error').textContent = 'Escribe una tarea y usa una hora final posterior a la inicial.'; return; } const editingId = $('session-form').dataset.editingId; schedule[day] = schedule[day] || []; const updatedSession = { id: editingId ? Number(editingId) : Date.now(), start, end, task, activity: $('session-activity').value }; if (editingId) { Object.keys(schedule).forEach((key) => { schedule[key] = schedule[key].filter((item) => String(item.id) !== String(editingId)); }); } schedule[day].push(updatedSession); saveSchedule(); selectedDay = day; $('session-dialog').close(); renderTabs(); renderSchedule(); updateStatus(); });
+$('day-range').addEventListener('change', () => applyDayRange($('day-range').value));
+$('time-interval').addEventListener('change', () => { populateTimeOptions(Number($('time-interval').value), $('session-start').value, $('session-end').value); });
+$('session-form').addEventListener('submit', (event) => { event.preventDefault(); const days = selectedDays(); const start = $('session-start').value; const end = $('session-end').value; const task = $('session-task').value.trim(); if (!days.length) { $('form-error').textContent = 'Selecciona al menos un día.'; return; } if (!task || !start || !end || minutes(end) <= minutes(start)) { $('form-error').textContent = 'Escribe una tarea y usa una hora final posterior a la inicial.'; return; } const editingId = $('session-form').dataset.editingId; const updatedSession = { id: editingId ? Number(editingId) : Date.now(), start, end, task, activity: $('session-activity').value }; if (editingId) { Object.keys(schedule).forEach((key) => { schedule[key] = schedule[key].filter((item) => String(item.id) !== String(editingId)); }); } days.forEach((day) => { schedule[day] = schedule[day] || []; schedule[day].push({ ...updatedSession }); }); saveSchedule(); selectedDay = days[0]; $('session-dialog').close(); renderTabs(); renderSchedule(); updateStatus(); });
 $('new-note').addEventListener('click', () => { const notes = ['Hazlo sencillo, pero hazlo hoy.', 'Tu yo del futuro agradece este bloque.', 'Constancia primero, velocidad después.', 'Un ejercicio más y cierras el cuaderno.']; $('daily-note').textContent = notes[Math.floor(Math.random() * notes.length)]; });
-$('test-notification').addEventListener('click', async () => { try { const response = await fetch('/api/notify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ title: 'Agendado', message: 'Este es un aviso de prueba. Tu próximo bloque te espera.' }) }); $('notification-status').textContent = response.ok ? 'Aviso enviado a Windows correctamente.' : 'El servidor respondió con un error.'; } catch { $('notification-status').textContent = 'Abre la app con python server.py para activar avisos.'; } });
+$('request-notification').addEventListener('click', async () => { if (!('Notification' in window)) { $('notification-status').textContent = 'Este navegador no admite notificaciones.'; return; } const permission = await Notification.requestPermission(); if (permission === 'granted') { $('notification-status').textContent = 'Permiso concedido. Recibirás avisos al comenzar cada actividad.'; new Notification('Agendado', { body: 'Las notificaciones están activadas.' }); } else { $('notification-status').textContent = 'El permiso de notificaciones no fue concedido.'; } });
 
 renderTabs(); renderSchedule(); updateClock(); notifyIfBlockStarts(); setInterval(() => { updateClock(); notifyIfBlockStarts(); }, 30000);

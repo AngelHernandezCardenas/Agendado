@@ -1,0 +1,2 @@
+# Packaging only; install on the target build operating system.
+pyinstaller>=6.0,<7

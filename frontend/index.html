@@ -61,10 +61,10 @@
     <section class="automation-strip">
       <div class="automation-icon">⌁</div>
       <div>
-        <strong>Recordatorios de escritorio</strong>
-        <p id="notification-status">Conecta el servidor local para enviar avisos de Windows.</p>
+        <strong>Notificaciones en tiempo real</strong>
+        <p id="notification-status">Permite las notificaciones para recibir un aviso cuando comience una actividad.</p>
       </div>
-      <button class="secondary-button" id="test-notification" type="button">Probar aviso</button>
+      <button class="secondary-button" id="request-notification" type="button">Permitir avisos</button>
     </section>
 
     <footer>JS para la agenda · Python para los avisos · C++ en tu ruta de práctica</footer>
@@ -73,8 +73,10 @@
   <dialog id="session-dialog">
     <form method="dialog" id="session-form">
       <div class="dialog-heading"><div><p class="eyebrow" id="dialog-eyebrow">NUEVO BLOQUE</p><h2 id="dialog-title">Agrega una tarea</h2></div><button class="close-button" value="cancel" aria-label="Cerrar">×</button></div>
-      <label>Día<select id="session-day"></select></label>
-      <div class="form-row"><label>Desde<input id="session-start" type="time" value="16:00" required></label><label>Hasta<input id="session-end" type="time" value="17:00" required></label></div>
+      <label>Días<select id="day-range"><option value="custom">Elegir días</option><option value="weekdays">Lun - Vie</option><option value="weekend">Sáb y Dom</option><option value="monday-saturday">Lun - Sáb</option><option value="everyday">Lun - Dom</option></select></label>
+      <div id="day-options" class="day-options" aria-label="Días seleccionables"></div>
+      <label>Intervalo de tiempo<select id="time-interval"><option value="5">Cada 5 minutos</option><option value="10">Cada 10 minutos</option><option value="15">Cada 15 minutos</option><option value="20">Cada 20 minutos</option><option value="25">Cada 25 minutos</option><option value="30">Cada 30 minutos</option></select></label>
+      <div class="form-row"><label>Desde<select id="session-start" required></select></label><label>Hasta<select id="session-end" required></select></label></div>
       <label>Tarea<input id="session-task" type="text" placeholder="Ej. Resolver ejercicios" required></label>
       <label>Actividad<select id="session-activity">
         <optgroup label="Programación">

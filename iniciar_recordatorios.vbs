@@ -2,7 +2,7 @@ Set shell = CreateObject("WScript.Shell")
 Set fso = CreateObject("Scripting.FileSystemObject")
 appFolder = fso.GetParentFolderName(WScript.ScriptFullName)
 pythonw = shell.ExpandEnvironmentStrings("%LocalAppData%\Programs\Python\Python311\pythonw.exe")
-server = appFolder & "\server.py"
+server = appFolder & "\backend\server.py"
 
 If Not fso.FileExists(pythonw) Then
   pythonw = "pythonw.exe"
