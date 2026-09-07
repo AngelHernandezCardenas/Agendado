@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f4efe6">
+  <title>Agendado | Horario de estudio</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">AGENDA DE ESTUDIO</p>
+        <h1>Agendado</h1>
+        <p class="subtitle">Tu pequeño horario escolar para avanzar con constancia.</p>
+      </div>
+      <div class="clock-panel" aria-live="polite">
+        <span id="date-label">Cargando fecha...</span>
+        <strong id="clock">--:--</strong>
+      </div>
+    </header>
+
+    <section class="hero-grid">
+      <article class="status-card" id="status-card">
+        <div class="status-heading">
+          <span class="status-dot" id="status-dot"></span>
+          <span id="status-kicker">ESTADO DE HOY</span>
+        </div>
+        <h2 id="status-title">Preparando tu jornada</h2>
+        <p id="status-description">Revisando el siguiente bloque de estudio.</p>
+        <div class="next-block" id="next-block">
+          <span>PRÓXIMO BLOQUE</span>
+          <strong id="next-block-label">--</strong>
+        </div>
+      </article>
+
+      <aside class="note-card">
+        <span class="tape tape-left"></span><span class="tape tape-right"></span>
+        <span class="note-label">NOTA DEL DÍA</span>
+        <p id="daily-note">La disciplina se construye bloque a bloque. Hoy cuenta.</p>
+        <button class="link-button" id="new-note" type="button">Cambiar nota</button>
+      </aside>
+    </section>
+
+    <section class="week-section">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">SEMANA EN PAPEL</p>
+          <h2>Horario semanal</h2>
+        </div>
+        <button class="primary-button" id="add-session" type="button">+ Añadir bloque</button>
+      </div>
+      <nav class="day-tabs" id="day-tabs" aria-label="Días de la semana"></nav>
+      <div class="schedule-wrap">
+        <div class="schedule-head"><span>HORA</span><span>BLOQUE DE ESTUDIO</span><span>AVISO</span></div>
+        <div id="schedule-list" class="schedule-list"></div>
+      </div>
+    </section>
+
+    <section class="automation-strip">
+      <div class="automation-icon">⌁</div>
+      <div>
+        <strong>Recordatorios de escritorio</strong>
+        <p id="notification-status">Conecta el servidor local para enviar avisos de Windows.</p>
+      </div>
+      <button class="secondary-button" id="test-notification" type="button">Probar aviso</button>
+    </section>
+
+    <footer>JS para la agenda · Python para los avisos · C++ en tu ruta de práctica</footer>
+  </main>
+
+  <dialog id="session-dialog">
+    <form method="dialog" id="session-form">
+      <div class="dialog-heading"><div><p class="eyebrow" id="dialog-eyebrow">NUEVO BLOQUE</p><h2 id="dialog-title">Agrega una tarea</h2></div><button class="close-button" value="cancel" aria-label="Cerrar">×</button></div>
+      <label>Día<select id="session-day"></select></label>
+      <div class="form-row"><label>Desde<input id="session-start" type="time" value="16:00" required></label><label>Hasta<input id="session-end" type="time" value="17:00" required></label></div>
+      <label>Tarea<input id="session-task" type="text" placeholder="Ej. Resolver ejercicios" required></label>
+      <label>Lenguaje<select id="session-language"><option>JavaScript</option><option>Python</option><option>C++</option><option>Automatización</option></select></label>
+      <p class="form-error" id="form-error" role="alert"></p>
+      <button class="primary-button full-width" value="default">Guardar bloque</button>
+    </form>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
