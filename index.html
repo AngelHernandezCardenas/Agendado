@@ -76,7 +76,21 @@
       <label>Día<select id="session-day"></select></label>
       <div class="form-row"><label>Desde<input id="session-start" type="time" value="16:00" required></label><label>Hasta<input id="session-end" type="time" value="17:00" required></label></div>
       <label>Tarea<input id="session-task" type="text" placeholder="Ej. Resolver ejercicios" required></label>
-      <label>Lenguaje<select id="session-language"><option>JavaScript</option><option>Python</option><option>C++</option><option>Automatización</option></select></label>
+      <label>Actividad<select id="session-activity">
+        <optgroup label="Programación">
+          <option>C/C++</option>
+          <option>Java</option>
+          <option>R</option>
+          <option>Python</option>
+        </optgroup>
+        <optgroup label="Estudio">
+          <option>Inglés</option>
+          <option>IA</option>
+          <option>Francés</option>
+          <option>Alemán</option>
+          <option>Otra actividad</option>
+        </optgroup>
+      </select></label>
       <p class="form-error" id="form-error" role="alert"></p>
       <button class="primary-button full-width" value="default">Guardar bloque</button>
     </form>

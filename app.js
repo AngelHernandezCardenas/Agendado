@@ -1,15 +1,16 @@
 const dayNames = ['DOMINGO', 'LUNES', 'MARTES', 'MIÉRCOLES', 'JUEVES', 'VIERNES', 'SÁBADO'];
 const shortDays = ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB'];
 const defaultSchedule = {
-  1: [{ start: '06:00', end: '07:00', task: 'JavaScript: fundamentos', language: 'JavaScript' }, { start: '15:00', end: '16:00', task: 'Python: práctica guiada', language: 'Python' }, { start: '16:15', end: '17:15', task: 'Automatización: flujo sencillo', language: 'Automatización' }],
-  2: [{ start: '06:00', end: '07:00', task: 'Python: estructuras de datos', language: 'Python' }, { start: '15:00', end: '16:00', task: 'C++: sintaxis y lógica', language: 'C++' }, { start: '16:15', end: '17:15', task: 'JavaScript: DOM', language: 'JavaScript' }],
-  3: [{ start: '06:00', end: '07:00', task: 'C++: ejercicios', language: 'C++' }, { start: '15:00', end: '16:00', task: 'Python: mini proyecto', language: 'Python' }, { start: '16:15', end: '17:15', task: 'Automatización: repaso', language: 'Automatización' }],
-  4: [{ start: '16:00', end: '17:00', task: 'JavaScript: interfaz', language: 'JavaScript' }, { start: '17:15', end: '18:15', task: 'C++: funciones', language: 'C++' }],
-  5: [{ start: '16:00', end: '17:00', task: 'Python: proyecto semanal', language: 'Python' }, { start: '17:15', end: '18:15', task: 'Automatización: práctica', language: 'Automatización' }],
-  6: [{ start: '10:00', end: '11:00', task: 'Repaso libre: JavaScript', language: 'JavaScript' }],
-  0: [{ start: '10:00', end: '11:00', task: 'Planear la semana', language: 'Automatización' }]
+  1: [{ start: '06:00', end: '07:00', task: 'JavaScript: fundamentos', activity: 'JavaScript' }, { start: '15:00', end: '16:00', task: 'Python: práctica guiada', activity: 'Python' }, { start: '16:15', end: '17:15', task: 'Automatización: flujo sencillo', activity: 'Automatización' }],
+  2: [{ start: '06:00', end: '07:00', task: 'Python: estructuras de datos', activity: 'Python' }, { start: '15:00', end: '16:00', task: 'C++: sintaxis y lógica', activity: 'C++' }, { start: '16:15', end: '17:15', task: 'JavaScript: DOM', activity: 'JavaScript' }],
+  3: [{ start: '06:00', end: '07:00', task: 'C++: ejercicios', activity: 'C++' }, { start: '15:00', end: '16:00', task: 'Python: mini proyecto', activity: 'Python' }, { start: '16:15', end: '17:15', task: 'Automatización: repaso', activity: 'Automatización' }],
+  4: [{ start: '16:00', end: '17:00', task: 'JavaScript: interfaz', activity: 'JavaScript' }, { start: '17:15', end: '18:15', task: 'C++: funciones', activity: 'C++' }],
+  5: [{ start: '16:00', end: '17:00', task: 'Python: proyecto semanal', activity: 'Python' }, { start: '17:15', end: '18:15', task: 'Automatización: práctica', activity: 'Automatización' }],
+  6: [{ start: '10:00', end: '11:00', task: 'Repaso libre: JavaScript', activity: 'JavaScript' }],
+  0: [{ start: '10:00', end: '11:00', task: 'Planear la semana', activity: 'Automatización' }]
 };
 let schedule = JSON.parse(localStorage.getItem('recordatorios-schedule')) || defaultSchedule;
+Object.values(schedule).flat().forEach((item) => { if (!item.activity && item.language) item.activity = item.language; });
 let selectedDay = new Date().getDay();
 const $ = (id) => document.getElementById(id);
 Object.values(schedule).flat().forEach((item) => { if (!item.id) item.id = Date.now() + Math.random(); });
@@ -25,7 +26,7 @@ function renderTabs() {
 }
 function renderSchedule() {
   const sessions = [...(schedule[selectedDay] || [])].sort((a, b) => a.start.localeCompare(b.start));
-  $('schedule-list').innerHTML = sessions.length ? sessions.map((item) => `<div class="schedule-row"><div class="time">${formatTime(item.start)}<br><span>↓ ${formatTime(item.end)}</span></div><div class="task"><strong>${item.task}</strong><span>${item.language}</span></div><div class="alarm"><span>◷ aviso activo</span><span class="row-actions"><button class="icon-button edit-session" type="button" data-id="${item.id}">Editar</button><button class="icon-button delete-session" type="button" data-id="${item.id}">×</button></span></div></div>`).join('') : '<div class="empty-state">Día libre. También descansar es parte del plan.</div>';
+  $('schedule-list').innerHTML = sessions.length ? sessions.map((item) => `<div class="schedule-row"><div class="time">${formatTime(item.start)}<br><span>↓ ${formatTime(item.end)}</span></div><div class="task"><strong>${item.task}</strong><span>${item.activity || item.language}</span></div><div class="alarm"><span>◷ aviso activo</span><span class="row-actions"><button class="icon-button edit-session" type="button" data-id="${item.id}">Editar</button><button class="icon-button delete-session" type="button" data-id="${item.id}">×</button></span></div></div>`).join('') : '<div class="empty-state">Día libre. También descansar es parte del plan.</div>';
   document.querySelectorAll('.edit-session').forEach((button) => button.addEventListener('click', () => openSessionDialog(button.dataset.id)));
   document.querySelectorAll('.delete-session').forEach((button) => button.addEventListener('click', () => deleteSession(button.dataset.id)));
 }
@@ -48,7 +49,7 @@ function openSessionDialog(sessionId = null) {
   $('dialog-title').textContent = session ? 'Ajusta tu tarea' : 'Agrega una tarea';
   $('session-day').innerHTML = dayNames.map((name, index) => `<option value="${index}" ${index === selectedDay ? 'selected' : ''}>${name}</option>`).join('');
   $('session-start').value = session?.start || '16:00'; $('session-end').value = session?.end || '17:00';
-  $('session-task').value = session?.task || ''; $('session-language').value = session?.language || 'JavaScript'; $('form-error').textContent = '';
+  $('session-task').value = session?.task || ''; $('session-activity').value = session?.activity || session?.language || 'Python'; $('form-error').textContent = '';
   $('session-dialog').showModal();
 }
 function deleteSession(sessionId) {
@@ -66,7 +67,7 @@ function notifyIfBlockStarts() {
 }
 
 $('add-session').addEventListener('click', () => openSessionDialog());
-$('session-form').addEventListener('submit', (event) => { event.preventDefault(); const day = Number($('session-day').value); const start = $('session-start').value; const end = $('session-end').value; const task = $('session-task').value.trim(); if (!task || !start || !end || minutes(end) <= minutes(start)) { $('form-error').textContent = 'Escribe una tarea y usa una hora final posterior a la inicial.'; return; } const editingId = $('session-form').dataset.editingId; schedule[day] = schedule[day] || []; const updatedSession = { id: editingId ? Number(editingId) : Date.now(), start, end, task, language: $('session-language').value }; if (editingId) { Object.keys(schedule).forEach((key) => { schedule[key] = schedule[key].filter((item) => String(item.id) !== String(editingId)); }); } schedule[day].push(updatedSession); saveSchedule(); selectedDay = day; $('session-dialog').close(); renderTabs(); renderSchedule(); updateStatus(); });
+$('session-form').addEventListener('submit', (event) => { event.preventDefault(); const day = Number($('session-day').value); const start = $('session-start').value; const end = $('session-end').value; const task = $('session-task').value.trim(); if (!task || !start || !end || minutes(end) <= minutes(start)) { $('form-error').textContent = 'Escribe una tarea y usa una hora final posterior a la inicial.'; return; } const editingId = $('session-form').dataset.editingId; schedule[day] = schedule[day] || []; const updatedSession = { id: editingId ? Number(editingId) : Date.now(), start, end, task, activity: $('session-activity').value }; if (editingId) { Object.keys(schedule).forEach((key) => { schedule[key] = schedule[key].filter((item) => String(item.id) !== String(editingId)); }); } schedule[day].push(updatedSession); saveSchedule(); selectedDay = day; $('session-dialog').close(); renderTabs(); renderSchedule(); updateStatus(); });
 $('new-note').addEventListener('click', () => { const notes = ['Hazlo sencillo, pero hazlo hoy.', 'Tu yo del futuro agradece este bloque.', 'Constancia primero, velocidad después.', 'Un ejercicio más y cierras el cuaderno.']; $('daily-note').textContent = notes[Math.floor(Math.random() * notes.length)]; });
 $('test-notification').addEventListener('click', async () => { try { const response = await fetch('/api/notify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ title: 'Agendado', message: 'Este es un aviso de prueba. Tu próximo bloque te espera.' }) }); $('notification-status').textContent = response.ok ? 'Aviso enviado a Windows correctamente.' : 'El servidor respondió con un error.'; } catch { $('notification-status').textContent = 'Abre la app con python server.py para activar avisos.'; } });
 
