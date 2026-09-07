@@ -30,3 +30,114 @@ Para detenerlo manualmente, cierra el proceso `python.exe` desde el Administrado
 - Domingo: planificacion de la semana.
 
 La interfaz se construye con JavaScript y CSS sin dependencias. `server.py` sirve los archivos y usa PowerShell para solicitar el aviso de Windows.
+
+---
+
+## English
+
+# Agendado
+
+Local-use software for scheduling times and programming reminders for everyday activities.
+
+A local study planner for organizing JavaScript, Python, C++, and automation sessions.
+
+### Running
+
+Requires Python 3 and Windows for native notifications.
+
+```powershell
+python server.py
+```
+
+Open http://127.0.0.1:8765 on the PC. To open it on a phone, connect both devices to the same Wi-Fi network, run the server, and replace `<IP-OF-THIS-PC>` with the PC's IPv4 address, for example `http://192.168.1.25:8765`. You can find the IPv4 address by running `ipconfig` and looking for `IPv4 Address`. If Windows Firewall asks, allow access on private networks.
+
+Keep the page open to view the schedule and use the test notification button. The initial sessions are saved in the browser; new sessions persist in `localStorage`.
+
+### Opening Without VS Code
+
+Double-click `iniciar_recordatorios.vbs`. The server starts hidden and the planner opens automatically in the browser. You can create a shortcut to this file on the desktop or place it in the Windows startup folder to run it when you sign in.
+
+To stop it manually, close the `python.exe` process from Task Manager or run `Get-Process python | Stop-Process` in PowerShell.
+
+### Weekly Schedule
+
+- Monday, Tuesday, and Wednesday: session from 6:00 to 7:00 a.m. and return at 3:00 p.m.
+- Thursday and Friday: afternoon sessions.
+- Saturday: light review.
+- Sunday: plan the week.
+
+The interface is built with JavaScript and CSS without dependencies. `server.py` serves the files and uses PowerShell to request the Windows notification.
+
+---
+
+## Français
+
+# Agendado
+
+Logiciel à usage local pour planifier des horaires et programmer des rappels pour les activités quotidiennes.
+
+Agenda d'étude local pour organiser des sessions de JavaScript, Python, C++ et automatisation.
+
+### Exécution
+
+Python 3 et Windows sont requis pour les notifications natives.
+
+```powershell
+python server.py
+```
+
+Ouvrez http://127.0.0.1:8765 sur le PC. Pour l'ouvrir sur un téléphone, connectez les deux appareils au même réseau Wi-Fi, démarrez le serveur et remplacez `<IP-DE-CE-PC>` par l'adresse IPv4 du PC, par exemple `http://192.168.1.25:8765`. Vous pouvez trouver l'adresse IPv4 en exécutant `ipconfig` et en recherchant `Adresse IPv4`. Si le pare-feu Windows le demande, autorisez l'accès sur les réseaux privés.
+
+Laissez la page ouverte pour consulter l'emploi du temps et utiliser le bouton de notification de test. Les sessions initiales sont enregistrées dans le navigateur ; les nouvelles sessions sont conservées dans `localStorage`.
+
+### Ouverture sans VS Code
+
+Double-cliquez sur `iniciar_recordatorios.vbs`. Le serveur démarre en arrière-plan et l'agenda s'ouvre automatiquement dans le navigateur. Vous pouvez créer un raccourci vers ce fichier sur le bureau ou le placer dans le dossier de démarrage de Windows pour l'exécuter lors de la connexion.
+
+Pour l'arrêter manuellement, fermez le processus `python.exe` depuis le Gestionnaire des tâches ou exécutez `Get-Process python | Stop-Process` dans PowerShell.
+
+### Planning hebdomadaire
+
+- Lundi, mardi et mercredi : session de 6 h 00 à 7 h 00 et reprise à 15 h 00.
+- Jeudi et vendredi : sessions l'après-midi.
+- Samedi : révision légère.
+- Dimanche : planification de la semaine.
+
+L'interface est construite avec JavaScript et CSS sans dépendances. `server.py` sert les fichiers et utilise PowerShell pour demander la notification Windows.
+
+---
+
+## Deutsch
+
+# Agendado
+
+Lokale Software zum Festlegen von Zeitplänen und Programmieren von Erinnerungen für alltägliche Aktivitäten.
+
+Lokaler Lernplaner zum Organisieren von JavaScript-, Python-, C++- und Automatisierungseinheiten.
+
+### Ausführung
+
+Für native Benachrichtigungen werden Python 3 und Windows benötigt.
+
+```powershell
+python server.py
+```
+
+Öffne http://127.0.0.1:8765 auf dem PC. Um die Anwendung auf einem Smartphone zu öffnen, verbinde beide Geräte mit demselben WLAN, starte den Server und ersetze `<IP-DIESES-PC>` durch die IPv4-Adresse des PCs, zum Beispiel `http://192.168.1.25:8765`. Die IPv4-Adresse findest du mit `ipconfig` unter `IPv4-Adresse`. Wenn die Windows-Firewall fragt, erlaube den Zugriff in privaten Netzwerken.
+
+Lass die Seite geöffnet, um den Zeitplan anzuzeigen und die Testbenachrichtigung zu verwenden. Die voreingestellten Einheiten werden im Browser gespeichert; neue Einheiten bleiben in `localStorage` erhalten.
+
+### Öffnen ohne VS Code
+
+Doppelklicke auf `iniciar_recordatorios.vbs`. Der Server wird ausgeblendet gestartet und der Planer öffnet sich automatisch im Browser. Du kannst eine Verknüpfung zu dieser Datei auf dem Desktop erstellen oder sie in den Windows-Autostartordner legen, damit sie beim Anmelden ausgeführt wird.
+
+Um den Server manuell zu beenden, schließe den Prozess `python.exe` über den Task-Manager oder führe `Get-Process python | Stop-Process` in PowerShell aus.
+
+### Wochenplan
+
+- Montag, Dienstag und Mittwoch: Einheit von 6:00 bis 7:00 Uhr und Fortsetzung um 15:00 Uhr.
+- Donnerstag und Freitag: Nachmittagseinheiten.
+- Samstag: leichte Wiederholung.
+- Sonntag: die Woche planen.
+
+Die Oberfläche wird ohne Abhängigkeiten mit JavaScript und CSS erstellt. `server.py` stellt die Dateien bereit und verwendet PowerShell, um die Windows-Benachrichtigung anzufordern.
